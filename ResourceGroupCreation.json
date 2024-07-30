@@ -1,0 +1,135 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+         "Prefix": {
+            "type": "string",
+            "allowedValues":[
+                    "GITA"
+                ],
+            "defaultValue": "GITA",
+            "metadata": {
+                "description": "This will be the prefix of your RG name"
+            }
+         },
+            "RegionPrefix": {
+            "allowedValues":[
+                    "E2",
+                    "CU"
+                ],
+            "type": "string",
+            "metadata": {
+                "description": "select the region name"
+            }
+        },
+                "Environment": {
+            "allowedValues":[
+                "ACC",
+                "QA",
+                "PROD",
+                "TST",
+                "DEV",
+                "SANDBOX"
+                ],
+            "type": "string",
+            "metadata": {
+                "description": "select the environment"
+            }
+        },
+        "BusinessApplication": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the business application name"
+            }
+        },
+        "Suffix": {
+            "type": "string",
+            "defaultValue": "RG",
+            "metadata": {
+                "description": "RG will be the suffix for resource groups"
+            }
+        },
+        "RGLocation": {
+            "type": "string",
+            "allowedValues": [
+                "EASTUS2",
+                "CENTRALUS"
+            ],
+            "metadata": {
+                "description": "provide the region of resource group"
+            }
+        },
+        "ApplicationName": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the name of application"
+            }
+        },
+        "BillTo": {
+            "type": "int",
+            "metadata": {
+                "description": "Update the value of IO number for billing"
+            }
+        },
+        "BusinessCriticality": {
+            "type": "string",
+            "metadata": {
+                "description": "Business criticality"
+            }
+        },
+       "ContactEmail": {
+        "type": "string",
+        "metadata": {
+            "description": "Please provide the business application owner contact"
+        }
+       },
+       "DataClassification": {
+        "type": "string",
+        "metadata": {
+            "description": "Update classification of data as per business requirements"
+        }
+       },
+       "ProjectName": {
+        "type": "string",
+        "metadata": {
+            "description": "Provide the name of project"
+        }
+       },
+       "TimeProvisioned": {
+        "type": "string",
+        "defaultValue": "[utcNow('d')]",
+        "metadata": {
+            "description": "The date on which this Resource Group was provisioned"
+        }
+       }
+    },
+    "functions": [],
+    "variables": {
+        "RGname": "[toUpper(concat(parameters('Prefix'),'-',parameters('RegionPrefix'),'-',parameters('environment'),'-',parameters('BusinessApplication'),'-',parameters('Suffix')))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('RGname')]",
+            "Region": "[parameters('RGLocation')]"
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2022-09-01",
+            "location": "[parameters('RGLocation')]",
+            "dependsOn": [],
+            "tags": {
+                "Application":"[parameters('ApplicationName')]",
+                "BillTo": "[parameters('BillTo')]",
+                "BusinessCriticality": "[parameters('BusinessCriticality')]",
+                "ContactEmail": "[parameters('ContactEmail')]",
+                "DataClassification": "[parameters('DataClassification')]",
+                "Project": "[parameters('ProjectName')]",
+                "TimeProvisioned": "[parameters('TimeProvisioned')]"
+            }
+        }
+    ],
+    "outputs": {
+        "RGNamr": {
+            "type": "string",
+            "value": "[variables('RGname')]"
+        }
+    }
+}
